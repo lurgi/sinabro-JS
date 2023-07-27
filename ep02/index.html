@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <title>Sinabro JS EP 02</title>
+  </head>
+  <body>
+    <div id="app" class="container py-4 px-8">
+      <nav class="flex justify-between py-4">
+        <h1 class="text-3xl font-bold">
+          <span
+            class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+          >
+            my store
+          </span>
+        </h1>
+        <div
+          class="cart_btn flex hover:bg-green-300 p-2 rounded-full transition"
+        >
+          <p>Cart</p>
+          <p class="total_cart_count"></p>
+        </div>
+      </nav>
+      <div id="products" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+      <div id="cart-layer" class="fixed inset-0 hidden">
+        <div
+          class="fixed left-0 top-0 bottom-0 w-1/2 bg-black opacity-20"
+        ></div>
+        <div class="fixed right-0 top-0 bottom-0 w-1/2 bg-white p-2">
+          <div class="flex flex-col gap-y-4">
+            <div class="flex justify-end">
+              <button
+                type="button"
+                class="cart_close_btn hover:bg-green-300 rounded-full p-2 transition"
+              >
+                Close
+              </button>
+            </div>
+            <div class="cart_items"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
