@@ -49,61 +49,88 @@ async function main() {
   products.forEach((product) => {
     productMap[product.id] = product;
   });
-  console.log(productMap);
 
   document.querySelector("#products").innerHTML = products
     .map((product, index) => getProductHTML(product))
     .join("");
 
-  // Array.from(document.querySelectorAll(".btn-decrease")).forEach(button => {
-  //   button.addEventListener("Click", () => { ...})
-  // });
+  const updateCart = () => {
+    const totalCount = document.querySelector(".total_cart_count");
+    totalCount.innerHTML = `(${countCartCount()})`;
+    const productIdsInCart = Object.keys(countObj);
+    document.querySelector(".cart_items").innerHTML = productIdsInCart
+      .map((productId) => {
+        const productInCart = productMap[productId];
+        if (countObj[productId] === 0) return "";
+        return getProductHTML(productInCart, countObj[productId]);
+      })
+      .join("");
+  };
 
-  const totalCount = document.querySelector(".total_cart_count");
-  const cartBtn = document.querySelector(".cart_btn");
-  const cartCloseBtn = document.querySelector(".cart_close_btn");
-  const cartLayer = document.querySelector("#cart-layer");
-  totalCount.innerHTML = "(0)";
-  cartBtn.addEventListener("click", () => {
-    cartLayer.classList.remove("hidden");
+  const updateProductCount = (productId) => {
+    const productElement = document.querySelector(
+      `.product[data-product-id="${productId}"]`
+    );
+    const cartCount = productElement.querySelector(".cart-count");
+    if (countObj[productId] === 0) cartCount.innerHTML = "";
+    else cartCount.innerHTML = countObj[productId];
+    updateCart();
+  };
+
+  const increaseCount = (productId) => {
+    if (countObj[productId] === undefined) {
+      countObj[productId] = 0;
+    }
+    countObj[productId] += 1;
+    updateProductCount(productId);
+  };
+  const decreaseCount = (productId) => {
+    if (countObj[productId] === undefined) {
+      countObj[productId] = 0;
+    }
+    countObj[productId] -= 1;
+    updateProductCount(productId);
+  };
+
+  document.querySelector(".cart_btn").addEventListener("click", () => {
+    document.querySelector("#cart-layer").classList.remove("hidden");
+    document.querySelector("body").classList.add("cart_display");
   });
-  cartCloseBtn.addEventListener("click", () => {
-    cartLayer.classList.add("hidden");
+  document.querySelector(".cart_close_btn").addEventListener("click", () => {
+    document.querySelector("#cart-layer").classList.add("hidden");
+    document.querySelector("body").classList.remove("cart_display");
   });
 
   document.querySelector("#products").addEventListener("click", (event) => {
     const targetElement = event.target;
     const productElement = findElement(targetElement, ".product");
     const productId = productElement.getAttribute("data-product-id");
-    // const product = products.find((product) => product.id === productId);
-    const product = productMap[productId];
     if (
       targetElement.matches(".btn-decrease") ||
       targetElement.matches(".btn-increase")
     ) {
-      if (countObj[productId] === undefined) {
-        countObj[productId] = 0;
-      }
       if (targetElement.matches(".btn-decrease")) {
-        countObj[productId] = Math.max(0, countObj[productId] - 1);
+        decreaseCount(productId);
       } else if (targetElement.matches(".btn-increase")) {
-        countObj[productId] += 1;
+        increaseCount(productId);
       }
-      const cartCount = productElement.querySelector(".cart-count");
-      if (countObj[productId] === 0) cartCount.innerHTML = "";
-      else cartCount.innerHTML = countObj[productId];
     }
+  });
 
-    totalCount.innerHTML = `(${countCartCount()})`;
-
-    const productIdsInCart = Object.keys(countObj);
-    document.querySelector(".cart_items").innerHTML = productIdsInCart
-      .map((productId) => {
-        const productInCart = productMap[productId];
-        console.log(productInCart);
-        return getProductHTML(productInCart, countObj[productId]);
-      })
-      .join("");
+  document.querySelector(".cart_items").addEventListener("click", (event) => {
+    const targetElement = event.target;
+    const productElement = findElement(targetElement, ".product");
+    const productId = productElement.getAttribute("data-product-id");
+    if (
+      targetElement.matches(".btn-decrease") ||
+      targetElement.matches(".btn-increase")
+    ) {
+      if (targetElement.matches(".btn-decrease")) {
+        decreaseCount(productId);
+      } else if (targetElement.matches(".btn-increase")) {
+        increaseCount(productId);
+      }
+    }
   });
 }
 

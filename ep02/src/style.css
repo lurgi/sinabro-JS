@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body.cart_display {
+  overflow-y: hidden;
+}
