@@ -1,36 +1,6 @@
 import test from "./test.json?raw";
-
-async function getProducts() {
-  if (process.env.NODE_ENV === "development") {
-    return JSON.parse(test);
-  } else {
-    const products = await (
-      await fetch("https://learnwitheunjae.dev/api/sinabro-js/ecommerce")
-    ).then((response) => response.json());
-    return products;
-  }
-}
-
-const countObj = {};
-
-function getProductHTML(product, count = 0) {
-  return `<div class="product" data-product-id="${product.id}">
-      <img src="${product.images[0]}" alt="${product.id}"/>
-      <p>${product.name}</p>
-      <div class="flex justify-between items-center">
-        <p>Price : ${product.regularPrice}$</p>
-        <div class="flex gap-2">
-          <button class="btn-decrease hover:bg-green-300 transition bg-green-100 rounded-full w-6 h-6 flex justify-center items-center">-</button>
-          <p class="cart-count">${count === 0 ? "" : count}</p>
-          <button class="btn-increase hover:bg-green-300 transition bg-green-100 rounded-full w-6 h-6 flex justify-center items-center">+</button>
-        </div>
-      </div>
-    </div>`;
-}
-
-function countCartCount() {
-  return Object.values(countObj).reduce((acc, cur) => acc + cur, 0);
-}
+import { setupProducts, getProductElement } from "./products";
+import { setupCart } from "./cart";
 
 function findElement(startingElement, seletor) {
   let currentElement = startingElement;
@@ -44,52 +14,39 @@ function findElement(startingElement, seletor) {
 }
 
 async function main() {
-  const products = await getProducts();
-  const productMap = {};
-  products.forEach((product) => {
-    productMap[product.id] = product;
+  const { updateCount, productById } = await setupProducts({
+    container: document.querySelector("#products"),
   });
 
-  document.querySelector("#products").innerHTML = products
-    .map((product, index) => getProductHTML(product))
-    .join("");
-
-  const updateCart = () => {
-    const totalCount = document.querySelector(".total_cart_count");
-    totalCount.innerHTML = `(${countCartCount()})`;
-    const productIdsInCart = Object.keys(countObj);
-    document.querySelector(".cart_items").innerHTML = productIdsInCart
-      .map((productId) => {
-        const productInCart = productMap[productId];
-        if (countObj[productId] === 0) return "";
-        return getProductHTML(productInCart, countObj[productId]);
-      })
-      .join("");
-  };
-
-  const updateProductCount = (productId) => {
-    const productElement = document.querySelector(
-      `.product[data-product-id="${productId}"]`
-    );
-    const cartCount = productElement.querySelector(".cart-count");
-    if (countObj[productId] === 0) cartCount.innerHTML = "";
-    else cartCount.innerHTML = countObj[productId];
-    updateCart();
-  };
+  const countObj = {};
+  const { addProduct, removeProduct, updateCart } = setupCart({
+    container: document.querySelector(".cart_items"),
+    countObj,
+  });
 
   const increaseCount = (productId) => {
-    if (countObj[productId] === undefined) {
-      countObj[productId] = 0;
+    if (countObj[productId] === undefined || countObj[productId] === 0) {
+      countObj[productId] = 1;
+      addProduct({
+        product: productById(productId),
+        count: countObj[productId],
+      });
+    } else {
+      countObj[productId] += 1;
+      updateCart({ productId, count: countObj[productId] });
     }
-    countObj[productId] += 1;
-    updateProductCount(productId);
+    updateCount({ productId, count: countObj[productId] });
   };
+
   const decreaseCount = (productId) => {
-    if (countObj[productId] === undefined) {
-      countObj[productId] = 0;
+    if (countObj[productId] === 1) {
+      countObj[productId] -= 1;
+      removeProduct({ product: productById(productId) });
+    } else if (countObj[productId] !== 0) {
+      countObj[productId] -= 1;
+      updateCart({ productId, count: countObj[productId] });
     }
-    countObj[productId] -= 1;
-    updateProductCount(productId);
+    updateCount({ productId, count: countObj[productId] });
   };
 
   document.querySelector(".cart_btn").addEventListener("click", () => {
@@ -116,7 +73,6 @@ async function main() {
       }
     }
   });
-
   document.querySelector(".cart_items").addEventListener("click", (event) => {
     const targetElement = event.target;
     const productElement = findElement(targetElement, ".product");
