@@ -2,41 +2,39 @@ import bindReactiveState from "./reactivity";
 
 export function setupCounter() {
   // const countMap = {};
-  const [getCountMap, setCountMap] = bindReactiveState({
+  const countMap = bindReactiveState({
     name: "countMap",
     defaultValue: {},
   });
 
   const increase = ({ productId }) => {
-    const newCountMap = { ...getCountMap() };
-    if (newCountMap[productId] === undefined) {
-      newCountMap[productId] = 0;
+    if (countMap[productId] === undefined) {
+      countMap[productId] = 1;
     }
-    newCountMap[productId] += 1;
-    setCountMap(newCountMap);
-    return newCountMap[productId];
+    const oldValue = countMap[productId];
+    countMap[productId] = oldValue + 1;
+    return countMap[productId];
   };
 
   const decrease = ({ productId }) => {
-    const newCountMap = { ...getCountMap() };
-    if (newCountMap[productId] === undefined) {
-      newCountMap[productId] = 0;
-    }
-    newCountMap[productId] -= 1;
-    setCountMap(newCountMap);
-    return newCountMap[productId];
+    if (countMap[productId] === undefined) {
+      countMap[productId] = 0;
+    } else countMap[productId] = Math.max(countMap[productId] - 1, 0);
+    return countMap[productId];
   };
 
   const getTotalCount = () => {
-    let count = 0;
-    Object.values({ ...getCountMap() }).forEach((number) => {
-      count += number;
-    });
-    return count;
+    // let count = 0;
+    // Object.values({ ...getCountMap() }).forEach((number) => {
+    //   count += number;
+    // });
+    // return count;
+    return 0;
   };
 
   const getCountBtProductId = ({ productId }) => {
-    return getCountMap()[productId] || 0;
+    // return getCountMap()[productId] || 0;
+    return 0;
   };
 
   return {
