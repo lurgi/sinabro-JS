@@ -8,7 +8,9 @@ document.querySelector("#app").innerHTML = `
 `;
 
 async function fetchDatAndDisplay() {
-  const json = await (await fetch("http://localhost:3000/api/text")).json();
+  const API_HOST =
+    process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
+  const json = await (await fetch(`${API_HOST}/api/test`)).json();
   console.log(json);
   document.querySelector("#result").innerHTML = JSON.stringify(json, null, 2);
 }
