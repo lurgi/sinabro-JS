@@ -1,0 +1,22 @@
+{
+  "name": "miniquery",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "packages/library",
+    "apps/*"
+  ],
+  "dependencies": {
+    "@lurgi/mini-query": "0.0.1"
+  },
+  "scripts": {
+    "example": "yarn workspace example dev",
+    "build": "yarn workspace @lurgi/mini-query build",
+    "test": "yarn workspace @lurgi/mini-query test"
+  },
+  "author": "",
+  "license": "MIT"
+}

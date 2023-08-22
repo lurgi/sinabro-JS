@@ -1,0 +1,20 @@
+{
+  "name": "elmath-lurgi",
+  "version": "0.0.3",
+  "description": "",
+  "type": "module",
+  "main": "src/index.js",
+  "module": "src/index.esm.js",
+  "types": "src/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./src/index.cjs",
+      "import": "./src/index.esm.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
