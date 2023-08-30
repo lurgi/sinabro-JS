@@ -6,7 +6,7 @@
   "scripts": {
     "dev-server": "nodemon server.js",
     "dev": "vite",
-    "build": "vite build && move dist/index.html dist/main.html",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
