@@ -22,10 +22,11 @@ async function getRecentPost() {
 }
 
 async function renderFile(source, dest) {
-  const file = await fs.readFile(source);
   const recentposts = await getRecentPost();
+  const file = await fs.readFile(source);
   const result = mustache.render(file.toString(), {
     ...config,
+    recentposts,
   });
   await fs.writeFile(dest, result);
 }
@@ -65,7 +66,7 @@ async function buildContents() {
 async function build() {
   await fs.mkdir(DIST);
 
-  buildHtml();
-  buildContents();
+  await buildHtml();
+  await buildContents();
 }
 build();
