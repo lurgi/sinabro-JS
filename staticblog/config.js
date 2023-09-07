@@ -4,6 +4,7 @@ export default {
     pages: "pages",
     dist: "dist",
     constentsSlug: "post",
+    assets: "assets",
   },
   site: { title: "My Blog", author: "Jeong Woo" },
   updateDate(post) {

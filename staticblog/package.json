@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "static-server pages",
-    "build": "(rmdir /s /q dist || echo.) && node ./scripts/build.js",
+    "build": "rm -rf dist && node ./scripts/build.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "static-server dist"
   },

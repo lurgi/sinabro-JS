@@ -8,6 +8,7 @@ const DIST = config.build.dist;
 const PAGES = config.build.pages;
 const CONTENTS = config.build.contents;
 const CONTENTS_SLUG = config.build.constentsSlug;
+const ASSETS = config.build.assets;
 
 async function getRecentPost() {
   const files = await fs.readdir(CONTENTS);
@@ -63,9 +64,17 @@ async function buildContents() {
   }
 }
 
+async function copyAssets() {
+  const files = await fs.readFile(ASSETS);
+  for (const file of files) {
+    await fs.copyFile(`${ASSETS}/${file}`, `${DIST} / ${file}`);
+  }
+}
+
 async function build() {
   await fs.mkdir(DIST);
 
+  await copyAssets();
   await buildHtml();
   await buildContents();
 }
