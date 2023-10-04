@@ -1,0 +1,15 @@
+{
+  "name": "@lurgi/my-cli",
+  "version": "1.0.1",
+  "description": "",
+  "bin": {
+    "aaa": "src/cli.js"
+  },
+  "main": "index.js",
+  "scripts": {
+    "dev": "node src/cli.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}
